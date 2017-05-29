@@ -26,7 +26,9 @@ namespace hordeShooter
             f = this.FindForm();
 
             MainMenu mm = new MainMenu();
-            f.Controls.Add(mm);
+            GameScreen gs = new GameScreen();
+            //f.Controls.Add(mm);
+            f.Controls.Add(gs);
             f.Controls.Remove(this);
         }
     }

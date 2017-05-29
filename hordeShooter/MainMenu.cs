@@ -45,6 +45,9 @@ namespace hordeShooter
                         index = 0;
                     }
                     break;
+                case Keys.Escape:
+                    Application.Exit();
+                    break;
             }
 
             switch (lastIndex)
