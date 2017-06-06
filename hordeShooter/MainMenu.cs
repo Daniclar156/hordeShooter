@@ -48,6 +48,25 @@ namespace hordeShooter
                 case Keys.Escape:
                     Application.Exit();
                     break;
+
+                case Keys.Space:
+                    switch (index)
+                    {
+                        //start button
+                        case 0:
+                            GameScreen gs = new GameScreen();
+
+                            form.Controls.Add(gs);
+                            form.Controls.Remove(this);
+
+                            break;
+
+                        //highscore button
+                        case 1:
+                             //todo switch to highscore
+                            break;                    
+                    }
+                    break;
             }
 
             switch (lastIndex)

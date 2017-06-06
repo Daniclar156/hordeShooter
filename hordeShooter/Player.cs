@@ -33,25 +33,5 @@ namespace hordeShooter
                 angle += speed;
             }
         }
-
-        public void move(string direction)
-        {
-            if (direction == "up")
-            {
-                y -= speed;
-            }
-            if (direction == "down")
-            {
-                y += speed;
-            }
-            if (direction == "left")
-            {
-                x -= speed;
-            }
-            if (direction == "right")
-            {
-                x += speed;
-            }
-        }
     }
 }

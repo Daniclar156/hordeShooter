@@ -8,12 +8,14 @@ namespace hordeShooter
 {
     class Monster
     {
-        public int x, y, speed, health;
+        public int x, y, speed, health, width, height;
 
-        public Monster(int _x, int _y, int _speed, int _health)
+        public Monster(int _x, int _y, int _width, int _height, int _speed, int _health)
         {
             x = _x;
             y = _y;
+            width = _width;
+            height = _height;
             speed = _speed;
             health = _health;
         }
@@ -22,21 +24,21 @@ namespace hordeShooter
         {
             foreach (Monster m in Monsters)
             {
-                if(m.x == p.x && m.y == p.y)
+                if(m.x == GameScreen.relativeX && m.y == GameScreen.relativeY)
                 {
                     p.health--;
                 }
             }
         }
 
-        public void move(Player p)
+        public void move()
         {
-            if (p.x > x) { x++; }
-            else if(p.x < x) { x--; }
+            if (GameScreen.relativeX > x) { x+= speed;}
+            if(GameScreen.relativeX < x) { x-= speed;}
 
-            if (p.y > y) { y++; }
+            if (GameScreen.relativeY > y) { y+= speed;}
 
-            if (p.y < y) { y--; }
+            if (GameScreen.relativeY < y) { y-= speed;}
         }
     }
 }

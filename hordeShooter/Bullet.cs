@@ -37,7 +37,7 @@ namespace hordeShooter
             yChange = _yChange;
             
             //all movement based on speed sent to constuctor, hence mult value of 1
-            speedMultiplier = 1;
+            //speedMultiplier = 1;
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace hordeShooter
             y += yChange * speedMultiplier;
         }
 
-        public void OffScreen(List<Bullet> bullets, Form f)
+        public void OffScreen(List<Bullet> bullets, UserControl f)
         {
             List<int> toRemove = new List<int>();
 
