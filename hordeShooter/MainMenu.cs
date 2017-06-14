@@ -20,6 +20,8 @@ namespace hordeShooter
         {
             InitializeComponent();
             this.DoubleBuffered = true;
+
+            playLabel.BackColor = Color.Red;
         }
 
         private void MainMenu_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)

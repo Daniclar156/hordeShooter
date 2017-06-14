@@ -17,9 +17,11 @@ namespace hordeShooter
 
         //create graphic objects
         SolidBrush drawBrush = new SolidBrush(Color.Black);
-        SolidBrush monBrush = new SolidBrush(Color.Red);
+        SolidBrush healthBrush = new SolidBrush(Color.Red);
+        Pen drawPen = new Pen(Color.Black);
 
         //bullet objects
+        Bullet b;
         List<Bullet> bullets = new List<Bullet>();
         int bulletSpeed, bulletSize;
 
@@ -57,17 +59,18 @@ namespace hordeShooter
 
             //initial starting values for hero object
             int speedHero = 8;
+            int turnspeedHero = 5;
             int widthHero = 40;
             int heightHero = 40;
             int heroAngle = 0;
             int heroPoints = 0;
             int xHero = 683;
             int yHero = 384;
-            //todo health system
-            p = new Player(xHero, yHero, speedHero, heroPoints, widthHero, heightHero, heroAngle);
+            int healthHero = 300;
+            p = new Player(xHero, yHero, speedHero, heroPoints, widthHero, heightHero, heroAngle, turnspeedHero, healthHero);
 
             //initial bullet values
-            bulletSpeed = 6;
+            bulletSpeed = 5;
             bulletSize = 6;
             
             //initial monster values
@@ -78,7 +81,6 @@ namespace hordeShooter
             int monSpeed = 5;
             int monHealth = 1;
             m = new Monster(monX, monY, monWidth, monHeight, monSpeed, monHealth);
-
         }
 
 
@@ -149,13 +151,11 @@ namespace hordeShooter
 
         private void gameTimer_Tick(object sender, EventArgs e)
         {
-            //label1.Text = "x " + relativeX.ToString() + " y " + relativeY.ToString();
-            //label2.Text = " Mon X " + m.x.ToString() + " y " + m.y.ToString();
             //label3.Text = "  player draw X " + p.x.ToString() + " y " + p.y.ToString();
 
             //border objects
             int topBorder = -8, bottomBorder = 1064, leftBorder = -5, rightBorder = 1900;
-
+            #region movement
             //rotate left
             if (leftArrowDown)
             {
@@ -183,11 +183,11 @@ namespace hordeShooter
                 }
                 foreach (Bullet b in bullets)
                 {
-                    b.y += 8;
+                   b.y += 8;
                 }
                 foreach (Monster m in Monsters)
                 {
-                    m.y += 8;
+                   m.y += 8;
                 }
             }
             //move down
@@ -205,11 +205,11 @@ namespace hordeShooter
                 }
                 foreach (Bullet b in bullets)
                 {
-                    b.y -= 8;
+                   b.y -= 8;
                 }
                 foreach (Monster m in Monsters)
                 {
-                    m.y -= 8;
+                   m.y -= 8;
                 }
             }
             //move left
@@ -227,11 +227,11 @@ namespace hordeShooter
                 }
                 foreach (Bullet b in bullets)
                 {
-                    b.x += 8;
+                   b.x += 8;
                 }
                 foreach (Monster m in Monsters)
                 {
-                    m.x += 8;
+                   m.x += 8;
                 }
             }
             //move right
@@ -249,11 +249,11 @@ namespace hordeShooter
                 }
                 foreach (Bullet b in bullets)
                 {
-                    b.x -= 8;
+                   b.x -= 8;
                 }
                 foreach (Monster m in Monsters)
                 {
-                    m.x -= 8;
+                  m.x -= 8;
                 }
             }
 
@@ -268,24 +268,56 @@ namespace hordeShooter
             {
                 b.Move();
             }
+            #endregion
+
+            #region collision
+            //will contain index values of all bullets that have collided with a monster 
+            List<int> bulletsToRemove = new List<int>();
+
+            //will contain index values of all monsters that have collided with a bullet 
+            List<int> monstersToRemove = new List<int>();
+            foreach (Monster m in Monsters)
+            {
+                foreach (Bullet b in bullets)
+                {
+                    if (m.hit(b))
+                    {
+
+                        monstersToRemove.Add(Monsters.IndexOf(m));
+                        bulletsToRemove.Add(bullets.IndexOf(b));
+                    }
+                }
+            }
+
+            foreach (Monster m in Monsters)
+            {
+                if(p.collide(m) && p.health != 0)
+                {
+                    p.health--;
+                }
+                else if (p.health == 0)
+                {
+                    Application.Exit();
+                }
+            }
+            //reverse list so when removing you do so from the end of the list first           
+            bulletsToRemove.Reverse();
+            monstersToRemove.Reverse();
+
+            foreach (int i in bulletsToRemove)
+            {
+                bullets.RemoveAt(i);
+            }
+
+            foreach (int i in monstersToRemove)
+            {
+                Monsters.RemoveAt(i);
+            }
+
+            bulletsToRemove.Clear();
+            #endregion
             //paint the screen
             Refresh();
-        }
-
-        private void monsterTimer_Tick(object sender, EventArgs e)
-        {
-            //initial monster values
-            int monX = 0;
-            int monY = 0;
-            int monHeight = 30;
-            int monWidth = 30;
-            int monSpeed = 5;
-            int monHealth = 1;
-            m = new Monster(monX, monY, monWidth, monHeight, monSpeed, monHealth);
-            //todo while loop to make sure no more than correct amount of monsters per level is spawning
-
-            label5.Text = "monster count " + Monsters.Count().ToString();
-            Monsters.Add(m);
         }
 
         private void bulletTimer_Tick(object sender, EventArgs e)
@@ -312,8 +344,24 @@ namespace hordeShooter
                 //Use the OffScreen method from the first bullet since we know it exists.
                 bullets[0].OffScreen(bullets, this);
             }
+
         }
 
+        private void monsterTimer_Tick(object sender, EventArgs e)
+        {
+            //initial monster values
+            int monX = 0;
+            int monY = 0;
+            int monHeight = 30;
+            int monWidth = 30;
+            int monSpeed = 5;
+            int monHealth = 1;
+            m = new Monster(monX, monY, monWidth, monHeight, monSpeed, monHealth);
+            //todo while loop to make sure no more than correct amount of monsters per level is spawning
+
+            Monsters.Add(m);
+
+        }
 
         private void GameScreen_Paint(object sender, PaintEventArgs e)
         {
@@ -327,16 +375,22 @@ namespace hordeShooter
             e.Graphics.RotateTransform(p.angle);
 
             // draw the object in the middle of the rotated origin point
-            e.Graphics.DrawImage(Properties.Resources.guy, 0 - p.width / 2, 0 - p.width / 2, p.width, p.height);
+            e.Graphics.DrawImage(Properties.Resources.guy, 0 - p.width / 2, 0 - p.height / 2, p.width, p.height);
 
             //reset to original origin point
             e.Graphics.ResetTransform();
+
+            //temp
+            Font drawFont = new Font("Arial", 16);
+
+            //e.Graphics.DrawString("player", drawFont, drawBrush, relativeX, relativeY);
 
             foreach (Bullet b in bullets)
             {
                 e.Graphics.FillEllipse(drawBrush,
                     b.x, b.y,
                     bulletSize, bulletSize);
+                //label1.Text = "x " + b.x.ToString() + " y " + b.y.ToString();
             }
 
             foreach (Monster m in Monsters)
@@ -351,6 +405,13 @@ namespace hordeShooter
                 e.Graphics.DrawImage(Properties.Resources.enemy, Width / 2 + xDif, Height / 2 + yDif, m.width, m.height);
                 //monBrush, Width / 2 + xDif, Height / 2 + yDif, m.width, m.height
             }
+
+
+            //player health
+            e.Graphics.DrawRectangle(drawPen, 10, 728, 300, 20);
+
+            Rectangle healthRec = new Rectangle(10, 728, p.health, 20);
+            e.Graphics.FillRectangle(healthBrush, healthRec);
         }
     }
 }
