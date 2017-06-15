@@ -28,11 +28,17 @@ namespace hordeShooter
         //Monster objects
         Monster m;
         List<Monster> Monsters = new List<Monster>();
+        int monSpeed = 5;
+        Random ranPos = new Random();
 
         //player object
         Player p;
         public static int relativeX = 683;
         public static int relativeY = 384;
+        int score = 0;
+
+        //round multiplyer 
+        int roundMulti = 1;
 
         public static int backImageX = 0, backImageY = 0;
 
@@ -72,15 +78,7 @@ namespace hordeShooter
             //initial bullet values
             bulletSpeed = 5;
             bulletSize = 6;
-            
-            //initial monster values
-            int monX = 683;
-            int monY = 384;
-            int monHeight = 20;
-            int monWidth = 20;
-            int monSpeed = 5;
-            int monHealth = 1;
-            m = new Monster(monX, monY, monWidth, monHeight, monSpeed, monHealth);
+           
         }
 
 
@@ -257,11 +255,11 @@ namespace hordeShooter
                 }
             }
 
-            //move monster
             foreach (Monster m in Monsters)
             {
                 m.move();
             }
+
 
             //move bullet
             foreach (Bullet b in bullets)
@@ -282,6 +280,11 @@ namespace hordeShooter
                 {
                     if (m.hit(b))
                     {
+                        if ((score % 20) == 0 && score != 0) //if score is multiple of 20
+                        {
+                            roundMulti++;
+                            monSpeed++;
+                        }
 
                         monstersToRemove.Add(Monsters.IndexOf(m));
                         bulletsToRemove.Add(bullets.IndexOf(b));
@@ -293,7 +296,7 @@ namespace hordeShooter
             {
                 if(p.collide(m) && p.health != 0)
                 {
-                    p.health--;
+                    p.health = p.health - 5; 
                 }
                 else if (p.health == 0)
                 {
@@ -306,15 +309,32 @@ namespace hordeShooter
 
             foreach (int i in bulletsToRemove)
             {
-                bullets.RemoveAt(i);
+                try
+                {
+                    bullets.RemoveAt(i);
+                }
+                catch
+                {
+                  
+                }
             }
 
             foreach (int i in monstersToRemove)
             {
-                Monsters.RemoveAt(i);
+                try
+                {
+                    Monsters.RemoveAt(i);
+                }
+                catch
+                {
+
+                }
+                score = score + roundMulti;
             }
 
+            monstersToRemove.Clear();
             bulletsToRemove.Clear();
+
             #endregion
             //paint the screen
             Refresh();
@@ -350,11 +370,11 @@ namespace hordeShooter
         private void monsterTimer_Tick(object sender, EventArgs e)
         {
             //initial monster values
-            int monX = 0;
-            int monY = 0;
+            int monX =  ranPos.Next(0, 1360);//rand x
+            int monY = ranPos.Next(0, 760);//rand y
+            
             int monHeight = 30;
             int monWidth = 30;
-            int monSpeed = 5;
             int monHealth = 1;
             m = new Monster(monX, monY, monWidth, monHeight, monSpeed, monHealth);
             //todo while loop to make sure no more than correct amount of monsters per level is spawning
@@ -412,6 +432,11 @@ namespace hordeShooter
 
             Rectangle healthRec = new Rectangle(10, 728, p.health, 20);
             e.Graphics.FillRectangle(healthBrush, healthRec);
+
+            //score
+            e.Graphics.FillRectangle(drawBrush, 0, 0, 130, 30);
+            string scoreString = "Score: " + score;
+            e.Graphics.DrawString(scoreString, drawFont, healthBrush, 0, 0);
         }
     }
 }
