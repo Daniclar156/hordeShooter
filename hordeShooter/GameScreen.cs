@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace hordeShooter
 {
@@ -37,6 +38,9 @@ namespace hordeShooter
         public static int relativeY = 384;
         int score = 0;
 
+        //bgm player
+        System.Windows.Media.MediaPlayer bgmPlayer;
+
         //round multiplyer 
         int roundMulti = 1;
 
@@ -52,6 +56,10 @@ namespace hordeShooter
 
             bulletTimer.Enabled = true;
             bulletTimer.Start();
+
+            bgmPlayer = new System.Windows.Media.MediaPlayer();
+            bgmPlayer.Open(new Uri(Application.StartupPath + "/Resources/bgm.mp3"));
+            bgmPlayer.Play();
 
             OnStart();
         }
@@ -149,7 +157,10 @@ namespace hordeShooter
 
         private void gameTimer_Tick(object sender, EventArgs e)
         {
-            //label3.Text = "  player draw X " + p.x.ToString() + " y " + p.y.ToString();
+            if (bgmPlayer.Position == TimeSpan.Zero)
+            {
+                bgmPlayer.Play();
+            }
 
             //border objects
             int topBorder = -8, bottomBorder = 1064, leftBorder = -5, rightBorder = 1900;
@@ -280,6 +291,10 @@ namespace hordeShooter
                 {
                     if (m.hit(b))
                     {
+
+                        var squishPlayer = new System.Windows.Media.MediaPlayer();
+                        squishPlayer.Open(new Uri(Application.StartupPath + "/Resources/squish.mp3"));
+                        squishPlayer.Play();
                         if ((score % 20) == 0 && score != 0) //if score is multiple of 20
                         {
                             roundMulti++;
@@ -357,6 +372,11 @@ namespace hordeShooter
                     p.y + p.height / 2 - bulletSize / 2,
                     bulletSize, bulletSpeed, (float)xStep, (float)-yStep);
                 bullets.Add(b);
+
+
+                var shotPlayer = new System.Windows.Media.MediaPlayer();
+                shotPlayer.Open(new Uri(Application.StartupPath + "/Resources/shot.mp3"));
+                shotPlayer.Play();
             }
 
             if (bullets.Count > 0)
@@ -403,27 +423,21 @@ namespace hordeShooter
             //temp
             Font drawFont = new Font("Arial", 16);
 
-            //e.Graphics.DrawString("player", drawFont, drawBrush, relativeX, relativeY);
-
             foreach (Bullet b in bullets)
             {
                 e.Graphics.FillEllipse(drawBrush,
                     b.x, b.y,
                     bulletSize, bulletSize);
-                //label1.Text = "x " + b.x.ToString() + " y " + b.y.ToString();
             }
 
             foreach (Monster m in Monsters)
             {
                 int xDif = m.x - relativeX;
-                int yDif = m.y - relativeY;
-
-                //label4.Text = " xDif " + xDif + " yDif " + yDif;
+                int yDif = m.y - relativeY; 
 
                 //draw monsters
                 
                 e.Graphics.DrawImage(Properties.Resources.enemy, Width / 2 + xDif, Height / 2 + yDif, m.width, m.height);
-                //monBrush, Width / 2 + xDif, Height / 2 + yDif, m.width, m.height
             }
 
 

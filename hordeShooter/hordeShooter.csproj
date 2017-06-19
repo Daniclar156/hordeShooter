@@ -33,6 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,6 +45,7 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bullet.cs" />
@@ -109,6 +111,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\guy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\380_gunshot_single-mike-koenig.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Level Up.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Squish 1-SoundBible.com-662226724.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
