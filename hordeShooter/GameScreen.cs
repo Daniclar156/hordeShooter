@@ -14,12 +14,14 @@ namespace hordeShooter
     public partial class GameScreen : UserControl
     {
         //determines whether a key is being pressed or not - DO NOT CHANGE
-        Boolean leftArrowDown, aKeyDown, dKeyDown, sKeyDown, rightArrowDown, wKeyDown, spaceDown;
+        Boolean leftArrowDown, aKeyDown, dKeyDown, sKeyDown, rightArrowDown, upArrowDown, downArrowDown , wKeyDown, spaceDown, escapeDown;
 
         //create graphic objects
         SolidBrush drawBrush = new SolidBrush(Color.Black);
+        SolidBrush textBrush = new SolidBrush(Color.White);
         SolidBrush healthBrush = new SolidBrush(Color.Red);
         Pen drawPen = new Pen(Color.Black);
+        Font drawFont = new Font("Arial", 16);
 
         //bullet objects
         Bullet b;
@@ -104,6 +106,12 @@ namespace hordeShooter
                 case Keys.Right:
                     rightArrowDown = true;
                     break;
+                case Keys.Up:
+                    upArrowDown = true;
+                    break;
+                case Keys.Down:
+                    downArrowDown = true;
+                    break;
                 case Keys.A:
                     aKeyDown = true;
                     break;
@@ -116,8 +124,50 @@ namespace hordeShooter
                 case Keys.Space:
                     spaceDown = true;
                     break;
+                case Keys.Escape:
+                    escapeDown = true;
+                    break;
                 default:
                     break;
+            }
+
+            if (escapeDown)//pause menu
+            {
+                int index = 1;
+
+                gameTimer.Stop();
+                bulletTimer.Stop();
+                monsterTimer.Stop();
+                Graphics g = this.CreateGraphics();
+                drawPen.Color = Color.White;
+                drawBrush.Color = Color.Red;
+                drawPen.Width = 10;
+                drawFont = new Font("Arial", 30);
+                g.DrawRectangle(drawPen, 425, 200, 500, 300);
+                g.FillRectangle(drawBrush, 425, 200, 500, 300);
+                g.DrawString("Paused", drawFont, textBrush, 600, 200);
+                g.DrawString("Menu", drawFont, textBrush, 625, 300);
+                g.DrawString("Exit", drawFont, textBrush, 625, 400);
+
+                drawPen.Color = Color.Black;//selection box
+                drawPen.Width = 2;
+                if (index == 1 && downArrowDown)
+                {
+                    index++;
+                }
+                if (index == 2 && upArrowDown)
+                {
+                    index--;
+                }
+
+                if (index == 1)
+                {
+                    g.DrawRectangle(drawPen, 625, 300, 120, 50);
+                }
+                else if (index == 2)
+                {
+                    g.DrawRectangle(drawPen, 625, 400, 120, 50);
+                }
             }
         }
 
@@ -135,6 +185,12 @@ namespace hordeShooter
                 case Keys.Right:
                     rightArrowDown = false;
                     break;
+                case Keys.Up:
+                    upArrowDown = false;
+                    break;
+                case Keys.Down:
+                    downArrowDown = false;
+                    break;
                 case Keys.A:
                     aKeyDown = false;
                     break;
@@ -148,12 +204,16 @@ namespace hordeShooter
                     spaceDown = false;
                     break;
                 case Keys.Escape:
-                    Application.Exit();
+                    escapeDown = false;
+                    gameTimer.Start();
+                    bulletTimer.Start();
+                    monsterTimer.Start();
                     break;
                 default:
                     break;
             }
         }
+
 
         private void gameTimer_Tick(object sender, EventArgs e)
         {
@@ -277,6 +337,7 @@ namespace hordeShooter
             {
                 b.Move();
             }
+
             #endregion
 
             #region collision
@@ -315,7 +376,15 @@ namespace hordeShooter
                 }
                 else if (p.health == 0)
                 {
-                    Application.Exit();
+                    bgmPlayer.Stop();
+                    gameTimer.Stop();
+                    Form f = this.FindForm();
+                    MainMenu mm = new MainMenu();
+
+                    f.Controls.Add(mm);
+                    mm.Focus();
+                    f.Controls.Remove(this);
+                    return;
                 }
             }
             //reverse list so when removing you do so from the end of the list first           
@@ -420,8 +489,7 @@ namespace hordeShooter
             //reset to original origin point
             e.Graphics.ResetTransform();
 
-            //temp
-            Font drawFont = new Font("Arial", 16);
+            drawBrush.Color = Color.Black;//reset brush color
 
             foreach (Bullet b in bullets)
             {
@@ -442,15 +510,21 @@ namespace hordeShooter
 
 
             //player health
+            drawPen.Color = Color.White;
+            drawPen.Width = 10;
             e.Graphics.DrawRectangle(drawPen, 10, 728, 300, 20);
 
             Rectangle healthRec = new Rectangle(10, 728, p.health, 20);
             e.Graphics.FillRectangle(healthBrush, healthRec);
 
             //score
+            drawBrush.Color = Color.Red;
+            drawPen.Width = 3;
+            drawFont = new Font("Arial", 12);
             e.Graphics.FillRectangle(drawBrush, 0, 0, 130, 30);
+            e.Graphics.DrawRectangle(drawPen, 0, 0, 130, 30);
             string scoreString = "Score: " + score;
-            e.Graphics.DrawString(scoreString, drawFont, healthBrush, 0, 0);
+            e.Graphics.DrawString(scoreString, drawFont, textBrush, 0, 0);
         }
     }
 }
