@@ -46,6 +46,10 @@ namespace hordeShooter
         //round multiplyer 
         int roundMulti = 1;
 
+        //pause screen 
+        int toggle = 0;//is it open?
+        int index = 1;//index of selection
+
         public static int backImageX = 0, backImageY = 0;
 
         public GameScreen()
@@ -126,48 +130,74 @@ namespace hordeShooter
                     break;
                 case Keys.Escape:
                     escapeDown = true;
+                    toggle++;
                     break;
                 default:
                     break;
             }
 
-            if (escapeDown)//pause menu
+            if (escapeDown || toggle == 1)//pause menu
             {
-                int index = 1;
+                if (toggle == 1)
+                {
 
-                gameTimer.Stop();
-                bulletTimer.Stop();
-                monsterTimer.Stop();
-                Graphics g = this.CreateGraphics();
-                drawPen.Color = Color.White;
-                drawBrush.Color = Color.Red;
-                drawPen.Width = 10;
-                drawFont = new Font("Arial", 30);
-                g.DrawRectangle(drawPen, 425, 200, 500, 300);
-                g.FillRectangle(drawBrush, 425, 200, 500, 300);
-                g.DrawString("Paused", drawFont, textBrush, 600, 200);
-                g.DrawString("Menu", drawFont, textBrush, 625, 300);
-                g.DrawString("Exit", drawFont, textBrush, 625, 400);
+                    #region draw menu
+                    gameTimer.Stop();
+                    bulletTimer.Stop();
+                    monsterTimer.Stop();
+                    Graphics g = this.CreateGraphics();
+                    drawPen.Color = Color.White;
+                    drawBrush.Color = Color.Red;
+                    drawPen.Width = 10;
+                    drawFont = new Font("Arial", 30);
+                    g.DrawRectangle(drawPen, 425, 200, 500, 300);
+                    g.FillRectangle(drawBrush, 425, 200, 500, 300);
+                    g.DrawString("Paused", drawFont, textBrush, 600, 200);
+                    g.DrawString("Menu", drawFont, textBrush, 625, 300);
+                    g.DrawString("Exit Game", drawFont, textBrush, 585, 400);
+                    #endregion
 
-                drawPen.Color = Color.Black;//selection box
-                drawPen.Width = 2;
-                if (index == 1 && downArrowDown)
-                {
-                    index++;
-                }
-                if (index == 2 && upArrowDown)
-                {
-                    index--;
+                    drawPen.Color = Color.Black;//selection box
+                    drawPen.Width = 2;
+
+                    if (index == 1 && downArrowDown)//move selection box
+                    {
+                        index++;
+                    }
+                    if (index == 2 && upArrowDown)
+                    {
+                        index--;
+                    }
+
+                    if (index == 1 && toggle == 1)//draw selection box
+                    {
+                        g.DrawRectangle(drawPen, 625, 300, 120, 50);
+                    }
+                    if (index == 2 & toggle == 1)
+                    {
+                        g.DrawRectangle(drawPen, 585, 400, 200, 50);
+                    }
+
+                    if (spaceDown && index == 1)
+                    {
+                        MainMenu mm = new MainMenu();
+                        Form f = this.FindForm();
+                        f.Controls.Add(mm);
+                        f.Controls.Remove(this);
+                    }
+                    if (spaceDown && index == 2)
+                    {
+                        Application.Exit();
+                    }
                 }
 
-                if (index == 1)
-                {
-                    g.DrawRectangle(drawPen, 625, 300, 120, 50);
-                }
-                else if (index == 2)
-                {
-                    g.DrawRectangle(drawPen, 625, 400, 120, 50);
-                }
+            }
+            if (toggle == 2)
+            {
+                toggle = 0;
+                gameTimer.Start();
+                bulletTimer.Start();
+                monsterTimer.Start();
             }
         }
 
@@ -205,9 +235,6 @@ namespace hordeShooter
                     break;
                 case Keys.Escape:
                     escapeDown = false;
-                    gameTimer.Start();
-                    bulletTimer.Start();
-                    monsterTimer.Start();
                     break;
                 default:
                     break;
