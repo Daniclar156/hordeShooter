@@ -55,11 +55,23 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="gameoverScreen.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="gameoverScreen.Designer.cs">
+      <DependentUpon>gameoverScreen.cs</DependentUpon>
+    </Compile>
     <Compile Include="GameScreen.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GameScreen.Designer.cs">
       <DependentUpon>GameScreen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Leaderboards.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Leaderboards.Designer.cs">
+      <DependentUpon>Leaderboards.cs</DependentUpon>
     </Compile>
     <Compile Include="MainMenu.cs">
       <SubType>UserControl</SubType>
@@ -74,8 +86,14 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="gameoverScreen.resx">
+      <DependentUpon>gameoverScreen.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GameScreen.resx">
       <DependentUpon>GameScreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Leaderboards.resx">
+      <DependentUpon>Leaderboards.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainMenu.resx">
       <DependentUpon>MainMenu.cs</DependentUpon>
@@ -120,6 +138,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Squish 1-SoundBible.com-662226724.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\scores.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

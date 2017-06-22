@@ -65,7 +65,9 @@ namespace hordeShooter
 
                         //highscore button
                         case 1:
-                             //todo switch to highscore
+                            Leaderboards lb = new Leaderboards();
+                            form.Controls.Add(lb);
+                            form.Controls.Remove(this);
                             break;                    
                     }
                     break;

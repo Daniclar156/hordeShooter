@@ -38,7 +38,7 @@ namespace hordeShooter
         Player p;
         public static int relativeX = 683;
         public static int relativeY = 384;
-        int score = 0;
+        public static int score = 0;
 
         //bgm player
         System.Windows.Media.MediaPlayer bgmPlayer;
@@ -406,10 +406,10 @@ namespace hordeShooter
                     bgmPlayer.Stop();
                     gameTimer.Stop();
                     Form f = this.FindForm();
-                    MainMenu mm = new MainMenu();
+                    gameoverScreen gos = new gameoverScreen();
 
-                    f.Controls.Add(mm);
-                    mm.Focus();
+                    f.Controls.Add(gos);
+                    gos.Focus();
                     f.Controls.Remove(this);
                     return;
                 }

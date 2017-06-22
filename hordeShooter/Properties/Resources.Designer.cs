@@ -89,5 +89,17 @@ namespace hordeShooter.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;player&gt; 
+        ///&lt;name&gt;AAA&lt;/name&gt; 
+        ///&lt;score&gt;100&lt;/score&gt;  
+        ///&lt;/player&gt;.
+        /// </summary>
+        internal static string scores {
+            get {
+                return ResourceManager.GetString("scores", resourceCulture);
+            }
+        }
     }
 }

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace hordeShooter
 {
@@ -16,6 +17,8 @@ namespace hordeShooter
         {
             InitializeComponent();
         }
+
+        public static List<string> scores = new List<string>();
 
         private void Form1_Load(object sender, EventArgs e)
         {
